@@ -1,0 +1,224 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Add Currency Form</title>
+
+    <!-- <link rel="stylesheet" href="./styles.css"> -->
+    <link rel="stylesheet" href="./assests/scss/style.css">
+
+    <link rel="stylesheet" href="./main.js">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link
+        href="https://fonts.googleapis.com/css2?family=Lato:ital,wght@0,100;0,300;0,400;0,700;0,900;1,100;1,300;1,400;1,700;1,900&display=swap"
+        rel="stylesheet">
+</head>
+
+<body>
+    <div class="buttonAppear">
+        <button class="btnModal">Modal</button>
+    </div>
+
+    <div class="container-modal">
+        <div class="container">
+
+            <div class="header">
+                <h1>Thêm tài khoản</h1>
+                <div class="imghd">
+                    <img src="./assests/svg/closeicon.svg" alt="">
+                </div>
+
+            </div>
+
+            <div class="body">
+                <!-- Ví -->
+                <div class="vi">
+                    <div class="txt-title">
+                        <p>Ví</p>
+                    </div>
+
+                    <div class="txt-input">
+                        <!-- <input type="text"> -->
+                        <div class="fake-input">
+                            <p name="reset-inpuut" class="noidung">Chọn loại ví</p>
+                            <button class="btn-drop">
+                                <img src="./assests/svg/dropdownicon.svg">
+                            </button>
+
+                            <ul class="dropdown-menu">
+                                <li>
+                                    <p>Zalo pay</p>
+                                </li>
+                                <li>
+                                    <p>Momo</p>
+                                </li>
+                                <li>
+                                    <p>Bank</p>
+                                </li>
+                                <li>
+                                    <p>Cash</p>
+                                </li>
+                            </ul>
+
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Chủ tài khoản -->
+                <div class="vi">
+                    <div class="txt-title">
+                        <p>Chủ tài khoản</p>
+                    </div>
+
+                    <div class="txt-input">
+                        <input placeholder="Nhập tên" class="reset-inpuut" type="text">
+                    </div>
+                </div>
+
+                <!-- Email -->
+                <div class="vi">
+                    <div class="txt-title">
+                        <p>Email</p>
+                    </div>
+
+                    <div class="txt-input">
+                        <input placeholder="Nhập email" class="reset-inpuut" type="text">
+                    </div>
+                </div>
+
+                <!-- Hạn mức -->
+                <div class="vi">
+                    <div class="txt-title">
+                        <p>Hạn mức</p>
+                    </div>
+
+                    <div class="hanmucContainer">
+                        <!-- choose currency -->
+                        <div class="hanmucInput">
+                            <div class="input1">
+                                <input class="reset-inpuut" placeholder="0" type="number">
+                            </div>
+
+                            <div class="input2">
+                                <p name="reset-inpuutCrr" class="noidung"></p>
+                                <button class="btn-drop">
+                                    <img src="./assests/svg/dropdownicon.svg">
+                                </button>
+
+                                <ul class="dropdown-menu">
+                                    <li class="crrContainer">
+                                        <p data-currency="USD">USD</p>
+                                    </li>
+                                    <li class="crrContainer">
+                                        <p data-currency="GDP">GDP</p>
+                                    </li>
+                                    <li class="crrContainer">
+                                        <p data-currency="EUR">EUR</p>
+                                    </li>
+                                </ul>
+
+                            </div>
+                        </div>
+                        <!--  -->
+                    </div>
+
+
+                </div>
+
+                <!-- ADD CURRENCY -->
+                <div class="vi">
+                    <div class="empty"></div>
+                    <div class="add-currency">
+                        <button class="btn-add-currency">ADD CURRENCY</button>
+                    </div>
+                </div>
+
+                <!-- Gán cho level -->
+                <div class="vi">
+                    <div class="txt-title">
+                        <p>Gán cho level</p>
+                    </div>
+
+                    <div class="check-input">
+                        <div class="checkContain">
+                            <div class="level-center">
+                                <input class="reset-inpuut" type="checkbox">
+                                <label for="">Level 1</label>
+                            </div>
+
+                            <div class="level-center">
+                                <input class="reset-inpuut" type="checkbox">
+                                <label for="">Level 2</label>
+                            </div>
+
+                            <div class="level-center">
+                                <input class="reset-inpuut" type="checkbox">
+                                <label for="">Level 3</label>
+                            </div>
+
+                            <div class="level-center">
+                                <input class="reset-inpuut" type="checkbox">
+                                <label for="">VIP</label>
+                            </div>
+                        </div>
+
+
+
+                    </div>
+                </div>
+                <!-- Private key -->
+                <div class="vi">
+                    <div class="txt-title">
+                        <p> Private key</p>
+                    </div>
+
+                    <div class="txt-input">
+                        <input class="reset-inpuut" placeholder="Nhập private key" type="text">
+                    </div>
+                </div>
+                <!-- Developer Id -->
+                <div class="vi">
+                    <div class="txt-title">
+                        <p>Developer Id</p>
+                    </div>
+
+                    <div class="txt-input">
+                        <input class="reset-inpuut" placeholder="Nhập developer id" type="text">
+                    </div>
+                </div>
+
+                <!-- Access token -->
+                <div class="vi">
+                    <div class="txt-title">
+                        <p>Access token</p>
+                    </div>
+
+                    <div class="txt-input">
+                        <input class="reset-inpuut" placeholder="Nhập access token" type="text">
+                    </div>
+                </div>
+
+
+                <!-- button HUY/DONG Y -->
+                <div class="vi">
+                    <div class="btn-submit">
+                        <button class="btn-huy">HỦY</button>
+                        <button class="btn-dongy">ĐỒNG Ý</button>
+                    </div>
+                </div>
+
+            </div>
+        </div>
+    </div>
+
+
+    <script src="./main.js"></script>
+
+</body>
+
+
+
+</html>
