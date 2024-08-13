@@ -5,20 +5,77 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Login</title>
+    <link rel="stylesheet" href="../assests/scss/style.css">
+    <link rel="stylesheet" href="../assests/fontawesome/css/all.min.css" />
+
 </head>
 
 <body>
-    <div class="main">
+    <div class=" main">
 
-        <form method="POST" class="form" id="form-1">
-
-            <div class="form-group">
-                <label>User name</label>
-                <input />
-                <span></span>
+        <div class="login__container">
+            <div class="side__login">
+                <img src="../assests/image/batman.png" alt="">
             </div>
 
-        </form>
+            <form method="POST" class="form__login" id="form-1">
+
+
+                <div class="boredr__login">
+                    <h3>Member Login</h3>
+
+                    <div class="form-group">
+
+                        <div class="input__form">
+                            <i class="fal fa-envelope"></i>
+                            <input id="email" placeholder="Nhập email" maxlength="30" />
+                        </div>
+
+                        <span class="form-message"></span>
+
+                    </div>
+
+
+                    <div class="form-group">
+
+                        <div class="input__form">
+                            <i class="far fa-lock-alt"></i>
+                            <input type="password" id="password" placeholder="Nhập password" maxlength="30" />
+                        </div>
+
+                        <span class="form-message"></span>
+
+                    </div>
+
+
+                    <button class="form-submit">LOGIN</button>
+
+                    <div class="forgot">
+                        <p>Forgot Usernam / Password?</p>
+                    </div>
+                </div>
+
+            </form>
+        </div>
+
+        <script src="../js/validator.js"></script>
+
+        <script>
+
+            Validator({
+                form: '#form-1',
+                errorSelector: '.form-message',
+                rules: [
+                    Validator.isRequired('#email'),
+                    Validator.isEmail('#email'),
+
+                    Validator.isRequired('#password'),
+                    Validator.isPassword('#password', 6),
+                ]
+
+            })
+
+        </script>
 
     </div>
 </body>
