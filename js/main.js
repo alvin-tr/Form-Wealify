@@ -9,6 +9,8 @@ const containerModal = document.querySelector(".container-modal");
 const currencyValue = document.querySelector('[name = "reset-inpuutCrr]');
 const crrContainer = document.querySelectorAll("crrContainer")
 
+
+
 // mảng lưu trữ các giá trị Currency đã chọn
 let selectedValue = [];
 
@@ -80,6 +82,9 @@ btnX.addEventListener("click", () => {
 
 // xử lý ấn nút Modal thì mở body
 btnModal.addEventListener('click', (e) => {
+
+
+
   // container.classList.add("show");
   containerModal.classList.add("show");
   // xử lý tắt modal thì sau khi mở lên tự động cuộn lên trên cùng
@@ -206,3 +211,4 @@ btnAddCurrency.addEventListener("click", () => {
     }
   })
 });
+

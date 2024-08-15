@@ -30,9 +30,10 @@ $secondary-color: #a559bd;
     // width: 100vw;
     background-color: aliceblue;
     width: 40%;
-    height: 50%;
+    // height: 50%;
     border-radius: 5px;
     display: flex;
+    padding-bottom: 20px;
 }
 
 .side__login {
@@ -130,6 +131,8 @@ $secondary-color: #a559bd;
     background-color: #6fb455;
     border: 0;
     cursor: pointer;
+    color: white;
+    font-weight: 700;
 }
 
 .forgot{

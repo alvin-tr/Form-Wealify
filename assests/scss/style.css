@@ -544,9 +544,9 @@ input[type=number]::-webkit-inner-spin-button {
 .login__container {
   background-color: aliceblue;
   width: 40%;
-  height: 50%;
   border-radius: 5px;
   display: flex;
+  padding-bottom: 20px;
 }
 
 .side__login {
@@ -636,6 +636,8 @@ input[type=number]::-webkit-inner-spin-button {
   background-color: #6fb455;
   border: 0;
   cursor: pointer;
+  color: white;
+  font-weight: 700;
 }
 
 .forgot {

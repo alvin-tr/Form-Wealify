@@ -7,7 +7,7 @@
     <title>Login</title>
     <link rel="stylesheet" href="../assests/scss/style.css">
     <link rel="stylesheet" href="../assests/fontawesome/css/all.min.css" />
-
+    <script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
 </head>
 
 <body>
@@ -47,7 +47,6 @@
 
                     </div>
 
-
                     <button class="form-submit">LOGIN</button>
 
                     <div class="forgot">
@@ -66,11 +65,16 @@
                 form: '#form-1',
                 errorSelector: '.form-message',
                 rules: [
+
                     Validator.isRequired('#email'),
                     Validator.isEmail('#email'),
 
                     Validator.isRequired('#password'),
-                    Validator.isPassword('#password', 6),
+                    Validator.isPassword('#password', 8),
+                    Validator.hasNumber('#password'),
+                    Validator.hasUppercase('#password'),
+                    Validator.hasLowercase('#password'),
+                    Validator.hasCharacter('#password'),
                 ]
 
             })

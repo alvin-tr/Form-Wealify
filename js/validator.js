@@ -1,3 +1,8 @@
+const valueInputUserName = document.getElementById('email');
+const valueInputPassword = document.getElementById('password');
+const loginButton = document.querySelector('.form-submit')
+
+
 // đối tượng 'Validator'
 function Validator(options) {
 
@@ -10,17 +15,20 @@ function Validator(options) {
 
         formElement.onsubmit = function (e) {
             e.preventDefault();
+
+
         }
 
         // Lặp qua mỗi rule và xử lý sự kiện (lắng nghe sự kiện như blur, input,...)
         options.rules.forEach(function (rule) {
 
             // Lưu lại các rule cho mỗi inpuut
-
             if (Array.isArray(selectorRules[rule.selector])) {
+
                 selectorRules[rule.selector].push(rule.test);
 
             } else {
+
                 selectorRules[rule.selector] = [rule.test];
 
             }
@@ -30,6 +38,7 @@ function Validator(options) {
 
             // Xử lý trường hợp blur khỏi input
             if (inputElement) {
+
                 inputElement.onblur = function () {
 
                     validate(inputElement, rule)
@@ -40,11 +49,14 @@ function Validator(options) {
             inputElement.oninput = function () {
                 var errorElement = inputElement.parentElement.parentElement.querySelector(options.errorSelector)
 
-                errorElement.innerText = '';
-                inputElement.parentElement.style.border = '0';
+                if (!validate(inputElement, rule)) {
+                    errorElement.innerText = '';
+                    inputElement.parentElement.style.border = '0';
+                }
+
 
             }
-
+            console.log(inputElement);
         });
 
     }
@@ -56,27 +68,23 @@ function Validator(options) {
         // Lấy ra các rule của selector
         var rules = selectorRules[rule.selector]
 
-        // Lặp qua twungf rule để kiểm tra (check) || Nếu có lỗi thì dừng việc kiểm tra
+        // Lặp qua từng rule để kiểm tra (check) || Nếu có lỗi thì dừng việc kiểm tra
         for (var i = 0; i < rules.length; ++i) {
             errorMessage = rules[i](inputElement.value)
             if (errorMessage) break;
         }
 
-        console.log('errorMessage', errorMessage);
 
+        // Nêu lỗi thì hiển thị if nếu không lỗi thì hiển thị else
         if (errorMessage) {
             errorElement.innerText = errorMessage;
-            // inputElement.parentElement = document.querySelector('.input__form').style.border = '1px solid red';
             inputElement.parentElement.style.border = '1px solid red';
         }
         else {
             errorElement.innerText = '';
-            // inputElement.parentElement = document.querySelector('.input__form').style.border = '0';
             inputElement.parentElement.style.border = '0';
 
         }
-
-        console.log('okiadshuj', inputElement.parentElement);
 
     }
 
@@ -88,29 +96,96 @@ Validator.isRequired = function (selector) {
     return {
         selector: selector,
         test: function (value) {
-            return value ? undefined : 'Vui lòng nhập trường này'
+            return value ? undefined : 'Vui lòng nhập trường này !'
         }
     };
 }
 
 
-Validator.isEmail = function (selector) {
-    return {
-        selector: selector,
-        test: function (value) {
-            var regex = /^\w+([\.-]?\w+)*@\w+([\.-]?\w+)*(\.\w{2,3})+$/;
-            return regex.test(value) ? undefined : "Trường này phải là email!"
-        }
-    }
+// Validator.isEmail = function (selector) {
+//     return {
+//         selector: selector,
+//         test: function (value) {
+//             var regex = /^\w+([\.-]?\w+)*@\w+([\.-]?\w+)*(\.\w{2,3})+$/;
+//             return regex.test(value) ? undefined : "Trường này phải là email !"
+//         }
+//     }
+// }
+
+// Validator.isPassword = function (selector, min) {
+//     return {
+//         selector: selector,
+//         test: function (value) {
+//             return value.length >= min ? undefined : `Vui lòng nhập tối thiểu ${min} ký tự.`
+//         }
+//     }
+// }
+
+// Validator.hasNumber = function (selector) {
+//     return {
+//         selector: selector,
+//         test: function (value) {
+//             return /\d/.test(value) ? undefined : "Vui lòng nhập tối thiểu 1 chữ số";
+//         }
+//     }
+// }
+
+
+// Validator.hasUppercase = function (selector) {
+//     return {
+//         selector: selector,
+//         test: function (value) {
+//             return /[A-Z]/.test(value) ? undefined : "Vui lòng nhập ít nhất 1 chữ in hoa."
+//         }
+//     }
+// }
+
+// Validator.hasLowercase = function (selector) {
+//     return {
+//         selector: selector,
+//         test: function (value) {
+//             return /[a-z]/.test(value) ? undefined : "Vui lòng nhập ít nhất 1 chữ in thường."
+//         }
+//     }
+// }
+
+// Validator.hasCharacter = function (selector) {
+//     return {
+//         selector: selector,
+//         test: function (value) {
+//             return /[!@#$%^&*(),.?":{}|<>]/.test(value) ? undefined : " Vui lòng nhập ít nhất 1 ký tự đặc biệt."
+//         }
+//     }
+// }
+
+// xử lý login
+const userInfo = {
+    username: '',
+    password: ''
 }
 
+loginButton.addEventListener('click', function (event) {
+    event.preventDefault();
+
+    userInfo.username = valueInputUserName.value;
+    userInfo.password = valueInputPassword.value;
+
+    axios.post('http://localhost:8000/auth/login', userInfo)
+        .then(response => {
+            const accessToken = response.data.accessToken;
+            const refreshToken = response.data.refreshToken;
+
+            localStorage.setItem('accessToken', accessToken);
+            localStorage.setItem('refreshToken', refreshToken);
+
+            window.location.href = '/index.html';
+
+        })
+        .catch(error => {
+            console.error('Error:', error);
+            // Xử lý lỗi khi đăng nhập không thành công
+            alert('Login failed. Please check your credentials.');
+        });
 
 
-Validator.isPassword = function (selector, min) {
-    return {
-        selector: selector,
-        test: function (value) {
-            return value.length >= min ? undefined : `Vui lòng nhập tối thiểu ${min} ký tự`
-        }
-    }
-}
+})
