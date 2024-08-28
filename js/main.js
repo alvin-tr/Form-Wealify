@@ -30,6 +30,9 @@ const btnModal = document.querySelector('.btnModal');
 // modal
 const modal = document.querySelector('.modal')
 
+const bodyElement = document.body;
+
+
 // vòng lặp để hiện menu
 // xử lý xóa chữ hiện có để thay thế chữ được click trong menu
 dropdownButton.forEach((button, index) => {
@@ -212,3 +215,5 @@ btnAddCurrency.addEventListener("click", () => {
   })
 });
 
+
+console.log('ễtrnal');

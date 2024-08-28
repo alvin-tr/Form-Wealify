@@ -217,6 +217,16 @@
 
     <script src="./js/main.js"></script>
 
+    <script>
+        const accessToken = localStorage.getItem('accessToken');
+
+
+        if (!accessToken) {
+            window.location.href = '/auth/login.html';
+        }
+        console.log('ỉnernal');
+    </script>
+
 </body>
 
 

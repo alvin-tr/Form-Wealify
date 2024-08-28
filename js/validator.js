@@ -102,90 +102,144 @@ Validator.isRequired = function (selector) {
 }
 
 
-// Validator.isEmail = function (selector) {
-//     return {
-//         selector: selector,
-//         test: function (value) {
-//             var regex = /^\w+([\.-]?\w+)*@\w+([\.-]?\w+)*(\.\w{2,3})+$/;
-//             return regex.test(value) ? undefined : "Trường này phải là email !"
-//         }
-//     }
-// }
+Validator.isEmail = function (selector) {
+    return {
+        selector: selector,
+        test: function (value) {
+            var regex = /^\w+([\.-]?\w+)*@\w+([\.-]?\w+)*(\.\w{2,3})+$/;
+            return regex.test(value) ? undefined : "Trường này phải là email !"
+        }
+    }
+}
 
-// Validator.isPassword = function (selector, min) {
-//     return {
-//         selector: selector,
-//         test: function (value) {
-//             return value.length >= min ? undefined : `Vui lòng nhập tối thiểu ${min} ký tự.`
-//         }
-//     }
-// }
+Validator.isPassword = function (selector, min) {
+    return {
+        selector: selector,
+        test: function (value) {
+            return value.length >= min ? undefined : `Vui lòng nhập tối thiểu ${min} ký tự.`
+        }
+    }
+}
 
-// Validator.hasNumber = function (selector) {
-//     return {
-//         selector: selector,
-//         test: function (value) {
-//             return /\d/.test(value) ? undefined : "Vui lòng nhập tối thiểu 1 chữ số";
-//         }
-//     }
-// }
+Validator.hasNumber = function (selector) {
+    return {
+        selector: selector,
+        test: function (value) {
+            return /\d/.test(value) ? undefined : "Vui lòng nhập tối thiểu 1 chữ số";
+        }
+    }
+}
 
 
-// Validator.hasUppercase = function (selector) {
-//     return {
-//         selector: selector,
-//         test: function (value) {
-//             return /[A-Z]/.test(value) ? undefined : "Vui lòng nhập ít nhất 1 chữ in hoa."
-//         }
-//     }
-// }
+Validator.hasUppercase = function (selector) {
+    return {
+        selector: selector,
+        test: function (value) {
+            return /[A-Z]/.test(value) ? undefined : "Vui lòng nhập ít nhất 1 chữ in hoa."
+        }
+    }
+}
 
-// Validator.hasLowercase = function (selector) {
-//     return {
-//         selector: selector,
-//         test: function (value) {
-//             return /[a-z]/.test(value) ? undefined : "Vui lòng nhập ít nhất 1 chữ in thường."
-//         }
-//     }
-// }
+Validator.hasLowercase = function (selector) {
+    return {
+        selector: selector,
+        test: function (value) {
+            return /[a-z]/.test(value) ? undefined : "Vui lòng nhập ít nhất 1 chữ in thường."
+        }
+    }
+}
 
-// Validator.hasCharacter = function (selector) {
-//     return {
-//         selector: selector,
-//         test: function (value) {
-//             return /[!@#$%^&*(),.?":{}|<>]/.test(value) ? undefined : " Vui lòng nhập ít nhất 1 ký tự đặc biệt."
-//         }
-//     }
-// }
+Validator.hasCharacter = function (selector) {
+    return {
+        selector: selector,
+        test: function (value) {
+            return /[!@#$%^&*(),.?":{}|<>]/.test(value) ? undefined : " Vui lòng nhập ít nhất 1 ký tự đặc biệt."
+        }
+    }
+}
 
 // xử lý login
 const userInfo = {
-    username: '',
+    email: '',
     password: ''
 }
 
-loginButton.addEventListener('click', function (event) {
-    event.preventDefault();
+loginButton.addEventListener('click', function (e) {
+    e.preventDefault()
 
-    userInfo.username = valueInputUserName.value;
-    userInfo.password = valueInputPassword.value;
+    userInfo.email = valueInputUserName.value;
+    userInfo.password = valueInputPassword.value
 
-    axios.post('http://localhost:8000/auth/login', userInfo)
-        .then(response => {
-            const accessToken = response.data.accessToken;
-            const refreshToken = response.data.refreshToken;
+    fetch('https://dev-api.wealify.com/api/v1/cms/login', {
+        method: 'POST',
+        headers: {
+            'Content-Type': 'application/json',
+        },
+        body: JSON.stringify(userInfo)
+    })
+        .then(function (response) {
+            if (!response.ok) {
+                throw new Error('Đăng nhập không thành công')
+            }
+            return response.json();
+        })
+        .then(function (postData) {
 
-            localStorage.setItem('accessToken', accessToken);
-            localStorage.setItem('refreshToken', refreshToken);
+            console.log('postData', postData);
 
-            window.location.href = '/index.html';
+            const accessToken = postData.data.access_token;
+            const refreshToken = postData.data.refresh_token;
+
+            localStorage.setItem('accessToken', accessToken)
+            localStorage.setItem('refreshToken', refreshToken)
+
+            window.location.href = '/screens/manageBankWealify.html'
 
         })
-        .catch(error => {
-            console.error('Error:', error);
-            // Xử lý lỗi khi đăng nhập không thành công
-            alert('Login failed. Please check your credentials.');
-        });
+        .catch(function (error) {
+            console.log('error: ', error);
+            alert('Đăng nhập không thành công')
+        })
 
 
 })
+
+
+
+
+
+
+
+
+// loginButton.addEventListener('click', function (event) {
+//     event.preventDefault();
+
+//     userInfo.username = valueInputUserName.value;
+//     userInfo.password = valueInputPassword.value;
+
+//     axios.post('http://localhost:8000/auth/login', userInfo)
+//         .then(response => {
+//             const accessToken = response.data.accessToken;
+//             const refreshToken = response.data.refreshToken;
+
+
+//             localStorage.setItem('accessToken', accessToken);
+//             localStorage.setItem('refreshToken', refreshToken);
+
+//             window.location.href = '/index.html'
+
+
+//         })
+//         .then
+//         .catch(error => {
+//             console.error('Error:', error);
+//             // Xử lý lỗi khi đăng nhập không thành công
+//             alert('Login failed. Please check your credentials.');
+//         });
+
+
+// })
+
+
+
+
