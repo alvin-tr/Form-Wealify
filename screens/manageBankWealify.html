@@ -7,21 +7,23 @@
     <title>Bank Wealify</title>
     <link rel="stylesheet" href="../assests/scss/style.css">
     <link rel="stylesheet" href="../assests/fontawesome/css/all.min.css" />
+
+
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link
-        href="https://fonts.googleapis.com/css2?family=Lato:ital,wght@0,100;0,300;0,400;0,700;0,900;1,100;1,300;1,400;1,700;1,900&display=swap"
+        href="https://fonts.googleapis.com/css2?family=Inter:ital,opsz,wght@0,14..32,100..900;1,14..32,100..900&display=swap"
         rel="stylesheet">
 
 </head>
 
 <body>
-    <div class="container">
+    <div class="container_bankWealify">
         <!-- header -->
         <div class="header_container">
             <div class="header">
                 <div class="icon_header">
-                    <i class="far fa-bell"></i>
+                    <i class="fad fa-bell-on" style="--fa-primary-color: #74C0FC; --fa-secondary-color: #74C0FC;"></i>
                 </div>
                 <div class="icon_avatar">
                     <img src="../assests/image/1.png" />
@@ -38,15 +40,145 @@
 
             <!-- dropdown  -->
             <div class="dropdown_element">
-                <p>Tài khoản ngân hàng Việt Nam</p>
-                <div>
-                    <i class="far fa-angle-down"></i>
+                <div class="dropdown_element--contentfirst">
+                    <div class="icon__title">
+                        <p>Tài khoản ngân hàng Việt Nam</p>
+                        <div class="down__icon">
+                            <i class="far fa-angle-down"></i>
+                        </div>
+                    </div>
+
+
+                    <!-- nút phải -->
+                    <div class="item__content__dropdown">
+                        <div class="rightbutton">
+                            <button>SẮP XẾP</button>
+                            <button>THÊM TÀI KHOẢN</button>
+                        </div>
+
+                        <div class="card__item__container--grand">
+                            <div class="card__item__container">
+                                <div class="card__item__header">
+                                    <div class="content--header">
+                                        <h3>ACB - THE HUMAN BANK</h3>
+                                        <div class="uutien">
+                                            <p>Mức độ ưu tiên</p>
+                                            <span class="uutienNumber">1</span>
+                                        </div>
+                                    </div>
+
+                                    <div class="content__button--header">
+                                        <!-- eye -->
+                                        <div class="hover__simple">
+                                            <i class="far fa-eye"></i>
+                                        </div>
+                                        <!-- pencil -->
+                                        <div class="hover__simple">
+                                            <i class="fad fa-pencil"></i>
+                                        </div>
+                                        <!-- trash -->
+                                        <div class="hover__simple">
+                                            <i class="fas fa-trash"></i>
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <div class="card__item__body">
+                                    <div class="horizontal__item">
+                                        <p>
+                                            Ngân hàng
+                                        </p>
+                                        <p>ACB</p>
+                                    </div>
+                                    <!-- 2 -->
+                                    <div class="horizontal__item">
+                                        <p>
+                                            Chủ tài khoản
+                                        </p>
+                                        <p>THE HUMAN BANK</p>
+                                    </div>
+                                    <!-- 3 -->
+                                    <div class="horizontal__item">
+                                        <p>
+                                            Số tài khoản
+                                        </p>
+                                        <p>32947918234</p>
+                                    </div>
+                                    <!-- 4 -->
+                                    <div class="horizontal__item">
+                                        <p>
+                                            Gán cho level
+                                        </p>
+                                        <p>Level 2</p>
+                                    </div>
+                                    <!-- 5 -->
+                                    <div class="horizontal__item">
+                                        <p>
+                                            Hạn mức/ngày
+                                        </p>
+                                        <p>12,312,213 VND</p>
+                                    </div>
+                                    <!-- 6 -->
+                                    <div class="horizontal__item">
+                                        <p>
+                                            Đã top-up/ngày
+                                        </p>
+                                        <p>0 VND</p>
+                                    </div>
+                                    <!-- 7 -->
+                                    <div class="horizontal__item">
+                                        <p>
+                                            Còn lại
+                                        </p>
+                                        <p>12,312,213 VND</p>
+                                    </div>
+                                    <!-- 8 -->
+                                    <div class="horizontal__item">
+                                        <p>
+                                            Trạng thái
+                                        </p>
+                                        <span>Còn hạn mức</span>
+                                    </div>
+                                    <!-- 9 -->
+                                    <div class="horizontal__item">
+                                        <p>
+                                            Active
+                                        </p>
+                                        <label class="switch">
+                                            <input type="checkbox" checked>
+                                            <span class="slider round"></span>
+                                        </label>
+                                    </div>
+
+                                </div>
+                            </div>
+                        </div>
+
+                    </div>
+
+
                 </div>
+
+
+
             </div>
 
         </div>
 
     </div>
+
+    <script src="/js/bankWealify.js"></script>
+
+    <script>
+        const accessToken = localStorage.getItem('accessToken');
+
+
+        if (!accessToken) {
+            window.location.href = '/auth/login.html';
+        }
+        console.log('ỉnternal');
+    </script>
+
 </body>
 
 </html>

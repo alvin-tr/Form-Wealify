@@ -211,34 +211,6 @@ loginButton.addEventListener('click', function (e) {
 
 
 
-// loginButton.addEventListener('click', function (event) {
-//     event.preventDefault();
-
-//     userInfo.username = valueInputUserName.value;
-//     userInfo.password = valueInputPassword.value;
-
-//     axios.post('http://localhost:8000/auth/login', userInfo)
-//         .then(response => {
-//             const accessToken = response.data.accessToken;
-//             const refreshToken = response.data.refreshToken;
-
-
-//             localStorage.setItem('accessToken', accessToken);
-//             localStorage.setItem('refreshToken', refreshToken);
-
-//             window.location.href = '/index.html'
-
-
-//         })
-//         .then
-//         .catch(error => {
-//             console.error('Error:', error);
-//             // Xử lý lỗi khi đăng nhập không thành công
-//             alert('Login failed. Please check your credentials.');
-//         });
-
-
-// })
 
 
 
