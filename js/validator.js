@@ -193,7 +193,7 @@ loginButton.addEventListener('click', function (e) {
             localStorage.setItem('accessToken', accessToken)
             localStorage.setItem('refreshToken', refreshToken)
 
-            window.location.href = '/screens/manageBankWealify.html'
+            window.location.href = '../screens/manageBankWealify.html'
 
         })
         .catch(function (error) {

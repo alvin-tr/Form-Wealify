@@ -67,15 +67,15 @@
                 rules: [
 
                     Validator.isRequired('#email'),
-                    //  Validator.isEmail('#email'),
+                    Validator.isEmail('#email'),
 
                     Validator.isRequired('#password'),
-                    /*  Validator.isPassword('#password', 8),
-                      Validator.hasNumber('#password'),
-                      Validator.hasUppercase('#password'),
-                      Validator.hasLowercase('#password'),
-                      Validator.hasCharacter('#password'),
-                      */
+                    Validator.isPassword('#password', 8),
+                    Validator.hasNumber('#password'),
+                    Validator.hasUppercase('#password'),
+                    Validator.hasLowercase('#password'),
+                    Validator.hasCharacter('#password'),
+
                 ]
 
             })

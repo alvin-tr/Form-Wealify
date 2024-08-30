@@ -9,7 +9,6 @@
     <!-- <link rel="stylesheet" href="./styles.css"> -->
     <link rel="stylesheet" href="./assests/scss/style.css">
 
-    <link rel="stylesheet" href="./main.js">
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link
@@ -214,18 +213,22 @@
         </div>
     </div>
 
-
-    <script src="./js/main.js"></script>
-
     <script>
         const accessToken = localStorage.getItem('accessToken');
 
 
         if (!accessToken) {
             window.location.href = '/auth/login.html';
+        } else {
+            window.location.href = '../screens/manageBankWealify.html';
+
         }
         console.log('ỉnernal');
     </script>
+
+    <script src="./js/main.js"></script>
+
+
 
 </body>
 
