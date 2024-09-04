@@ -904,8 +904,8 @@ body {
   margin-bottom: 20px;
   margin-top: 30px;
   display: grid;
-  grid-template-columns: auto auto auto;
-  gap: 10px;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 20px;
 }
 
 .card__item__container {
@@ -913,7 +913,7 @@ body {
   flex-direction: column;
   border: 1px solid gray;
   border-radius: 6px;
-  margin-right: 20px;
+  overflow: hidden;
 }
 
 .card__item__header {
@@ -991,6 +991,7 @@ body {
   display: flex;
   flex-direction: row;
   margin-block: 5px;
+  overflow: hidden;
 }
 .horizontal__item p {
   width: 50%;
@@ -1077,5 +1078,5 @@ input:checked + .slider:before {
 }
 
 .item__content__dropdown.show {
-  max-height: 1000px;
+  max-height: 2000px;
 }/*# sourceMappingURL=style.css.map */
