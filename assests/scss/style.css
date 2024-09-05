@@ -1070,13 +1070,12 @@ input:checked + .slider:before {
 
 .item__content__dropdown {
   max-height: 0;
-  /* Ẩn nội dung ban đầu */
   overflow: hidden;
-  /* Ẩn phần nội dung tràn */
   transition: max-height 0.5s ease;
   padding-inline: 20px;
 }
 
 .item__content__dropdown.show {
   max-height: 2000px;
+  transition: max-height 2s ease;
 }/*# sourceMappingURL=style.css.map */

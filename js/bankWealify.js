@@ -1,29 +1,24 @@
 const contentContainer = document.querySelector('.content_container');
-const itemDrop = document.querySelector('.item__content__dropdown')
 
 
-document.querySelectorAll('.icon__title').forEach(function (element) {
-    element.addEventListener('click', function () {
 
-        // const downIcon = document.querySelector('.down__icon');
-        const downIcon = this.closest('.dropdown_element').querySelector('.down__icon');
+function clickEvenCard() {
+    document.querySelectorAll('.icon__title').forEach(function (element) {
+        element.addEventListener('click', function () {
 
-        if (downIcon) { // Kiểm tra nếu tồn tại down__icon
-            downIcon.classList.toggle('rotate'); // Thay đổi class rotate
-        }
+            const downIcon = this.closest('.dropdown_element').querySelector('.down__icon');
 
-        const content = this.closest('.dropdown_element').querySelector('.item__content__dropdown');
+            if (downIcon) {
+                downIcon.classList.toggle('rotate');
+            }
 
-        // if (content.style.display === 'none' || content.style.display === '') {
-        //     content.style.display = 'block';
-        // } else {
-        //     content.style.display = 'none';
-        // }
+            const content = this.closest('.dropdown_element').querySelector('.item__content__dropdown');
 
-        content.classList.toggle('show');
+            content.classList.toggle('show');
 
+        });
     });
-});
+}
 
 
 
@@ -40,69 +35,46 @@ fetch('https://dev-api.wealify.com/api/v1/cms/constants/providers', {
     .then(({ data }) => {
         console.log('NCC:', data);
         providerList(data)
+
     })
     .catch((error) => {
         console.error('Lỗi khi gọi dữ liệu:', error);
     })
 
 
+async function fetchListCard() {
+    try {
+        const response = await fetch('https://dev-api.wealify.com/api/v1/cms/system-payments', {
+            method: 'GET',
+            headers: {
+                'Content-Type': 'application/json',
+                Authorization: `Bearer ${localStorage.getItem('accessToken')}`
+            },
+            params: {
+                page: 1,
+                limit: 1000
+            }
+        });
+
+        const { data } = await response.json();
+
+        console.log('data Await:', data);
+
+        cardContainer(data)
+        console.log('cardContainer(data)', cardContainer(data));
 
 
 
-fetch('https://dev-api.wealify.com/api/v1/cms/system-payments', {
-    method: 'GET',
-    headers: {
-        'Content-Type': 'application/json',
-        Authorization: `Bearer ${localStorage.getItem('accessToken')}`
-    },
-    params: {
-        page: 1,
-        limit: 1000
+    } catch (error) {
+        console.log('Khong the doc du lieu: ', error);
     }
-})
-    .then((response) => {
-        return response.json()
-    })
-    .then(({ data }) => {
-        console.log('data: ', data);
-
-        const groupedData = {};
-
-        if (Array.isArray(data)) {
-            data.forEach(item => {
-                if (item.provider && item.provider.name) {
-                    const providerName = item.provider.name;
-
-                    if (!groupedData[providerName]) {
-                        groupedData[providerName] = [];
-                    }
-
-                    groupedData[providerName].push(item);
-                }
-            });
-        }
-
-
-        console.log('okk:', groupedData);
-
-        payCard(data)
-
-    })
-    .catch((error) => {
-        console.log('Cannot render data:', error);
-    })
-
-
+}
 
 
 
 function providerList(NCCS) {
     const container = document.createElement("div");
     container.className = "dropdown_element";
-    // 1.
-    // 2. 
-
-
 
     container.innerHTML = NCCS.map(ncc => {
 
@@ -122,16 +94,25 @@ function providerList(NCCS) {
                         </div>
                     </div>
 
+
+                    <!-- nút phải -->
                     <div class="item__content__dropdown">
                         <div class="rightbutton">
                             <button>SẮP XẾP</button>
                             <button>THÊM TÀI KHOẢN</button>
                         </div>
 
-                        
+                    <div class="card__item__container--grand">
+                    
+                        ${cardContainer()}
+                    </div>
 
                     </div>
+
+
                 </div>
+
+
 
             </div>
         `
@@ -139,25 +120,25 @@ function providerList(NCCS) {
 
 
     contentContainer.appendChild(container)
+    clickEvenCard()
+
+
+    cardContainer(cardListItem)
 
 }
 
-
-
-function payCard(cards) {
-
+function cardContainer() {
 
 
 
-    const container = document.createElement("div");
-    container.className = "card__item__container--grand"
+    let card = []
 
-    container.innerHTML = cards.map(card => {
+    let cardRender = cards.map(card => {
         return `
-        <div class="card__item__container">
+             <div class="card__item__container">
                                 <div class="card__item__header">
                                     <div class="content--header">
-                                        <h3></h3>
+                                        <h3>ACB - THE HUMAN BANK</h3>
                                         <div class="uutien">
                                             <p>Mức độ ưu tiên</p>
                                             <span class="uutienNumber">1</span>
@@ -253,6 +234,14 @@ function payCard(cards) {
         `
     }).join('')
 
-    itemDrop.appendChild(container)
-    console.log('itemDrop', container);
+    return cardRender;
 }
+
+
+fetchListCard()
+
+
+
+
+
+
