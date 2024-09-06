@@ -307,11 +307,26 @@ body {
     width: 70%;
 
     h3 {
+            font-size: 17px;
+            font-family: $fontFamilyInter;
+            font-weight: 600;
+            color: $textContent;
+        }
+
+    .h3__bank{
+        display: flex;
+        flex-direction: row;
+        overflow: hidden;
+        white-space: nowrap;
+        text-overflow: ellipsis;
+h3 {
         font-size: 17px;
         font-family: $fontFamilyInter;
         font-weight: 600;
         color: $textContent;
     }
+    }
+   
 }
 
 .content__button--header{

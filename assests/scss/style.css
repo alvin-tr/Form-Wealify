@@ -935,6 +935,19 @@ body {
   font-weight: 600;
   color: rgba(58, 53, 65, 0.8705882353);
 }
+.content--header .h3__bank {
+  display: flex;
+  flex-direction: row;
+  overflow: hidden;
+  white-space: nowrap;
+  text-overflow: ellipsis;
+}
+.content--header .h3__bank h3 {
+  font-size: 17px;
+  font-family: "Inter", sans-serif;
+  font-weight: 600;
+  color: rgba(58, 53, 65, 0.8705882353);
+}
 
 .content__button--header {
   width: 30%;
