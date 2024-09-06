@@ -1064,6 +1064,10 @@ input:checked + .slider {
   background-color: rgb(48, 181, 31);
 }
 
+input:not(:checked) + .slider {
+  background-color: #ccc;
+}
+
 input:focus + .slider {
   box-shadow: 0 0 1px rgb(48, 181, 31);
 }

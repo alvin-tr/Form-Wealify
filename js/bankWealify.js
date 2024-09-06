@@ -1,67 +1,61 @@
-
-
-
-
 function clickEvenCard() {
-    document.querySelectorAll('.icon__title').forEach(function (element) {
-        element.addEventListener('click', function () {
+  document.querySelectorAll(".icon__title").forEach(function (element) {
+    element.addEventListener("click", function () {
+      const downIcon =
+        this.closest(".dropdown_element").querySelector(".down__icon");
 
-            const downIcon = this.closest('.dropdown_element').querySelector('.down__icon');
+      if (downIcon) {
+        downIcon.classList.toggle("rotate");
+      }
 
-            if (downIcon) {
-                downIcon.classList.toggle('rotate');
-            }
+      const content = this.closest(".dropdown_element").querySelector(
+        ".item__content__dropdown"
+      );
 
-            const content = this.closest('.dropdown_element').querySelector('.item__content__dropdown');
-
-            content.classList.toggle('show');
-
-        });
+      content.classList.toggle("show");
     });
+  });
 }
 
-
-fetch('https://dev-api.wealify.com/api/v1/cms/constants/providers', {
-    method: 'GET',
-    headers: {
-        'content-Type': 'application/json',
-        Authorization: `Bearer ${localStorage.getItem('accessToken')}`
-    },
+fetch("https://dev-api.wealify.com/api/v1/cms/constants/providers", {
+  method: "GET",
+  headers: {
+    "content-Type": "application/json",
+    Authorization: `Bearer ${localStorage.getItem("accessToken")}`,
+  },
 })
-    .then((response) => {
-        return response.json()
-    })
-    .then(({ data }) => {
-        console.log('NCC:', data);
-        providerList(data)
-        console.log(' providerList(data)', providerList(data));
-
-    })
-    .catch((error) => {
-        console.error('Lỗi khi gọi dữ liệu:', error);
-    })
+  .then((response) => {
+    return response.json();
+  })
+  .then(({ data }) => {
+    console.log("NCC:", data);
+    providerList(data);
+    console.log(" providerList(data)", providerList(data));
+  })
+  .catch((error) => {
+    console.error("Lỗi khi gọi dữ liệu:", error);
+  });
 
 let isProviderListCalled = false;
 async function providerList(NCCS) {
-    if (isProviderListCalled) return;
-    isProviderListCalled = true;
-    const contentContainer = document.querySelector('.content_container');
-    contentContainer.innerHTML = '';
+  if (isProviderListCalled) return;
+  isProviderListCalled = true;
 
-    const container = document.createElement("div");
-    container.className = "dropdown_element";
+  const contentContainer = document.querySelector(".content_container");
+  contentContainer.innerHTML = "";
 
-    let cardRender = await cardContainer();
+  const container = document.createElement("div");
+  container.className = "dropdown_element";
 
-    container.innerHTML = NCCS.map(ncc => {
+  container.innerHTML = NCCS.map((ncc) => {
+    const name =
+      ncc.name === "Bank transfer" ? "Tài khoản ngân hàng Việt Nam" : ncc.name;
 
-        const name = ncc.name === 'Bank transfer' ? 'Tài khoản ngân hàng Việt Nam' : ncc.name
+    if (ncc.name === "Wealify") {
+      return "";
+    }
 
-        if (ncc.name === 'Wealify') {
-            return '';
-        }
-
-        return `
+    return `
              <div class="dropdown_element">
                 <div class="dropdown_element--contentfirst">
                     <div class="icon__title">
@@ -79,9 +73,9 @@ async function providerList(NCCS) {
                             <button>THÊM TÀI KHOẢN</button>
                         </div>
 
-                    <div class="card__item__container--grand">
+                    <div class="card__item__container--grand" id="provider-${ncc.name}">
                     
-                    ${cardRender}
+                    
                         
                     </div>
 
@@ -93,63 +87,74 @@ async function providerList(NCCS) {
 
 
             </div>
-        `
-    }).join('')
+        `;
+  }).join("");
 
+  contentContainer.appendChild(container);
 
-    contentContainer.appendChild(container)
-    clickEvenCard()
+  for (const ncc of NCCS) {
+    if (ncc.name !== "Wealify") {
+      let providerContainer = document.getElementById(`provider-${ncc.name}`);
+      let cardRender = await cardContainer(ncc.name);
+      providerContainer.innerHTML = cardRender;
+    }
+  }
 
+  clickEvenCard();
 }
 
+async function cardContainer(providerName) {
+  let card = [];
 
-// async function fetchListCard() {
-//     try {
-//         const response = await fetch('https://dev-api.wealify.com/api/v1/cms/system-payments', {
-//             method: 'GET',
-//             headers: {
-//                 'Content-Type': 'application/json',
-//                 Authorization: `Bearer ${localStorage.getItem('accessToken')}`
-//             },
-//             params: {
-//                 page: 1,
-//                 limit: 1000
-//             }
-//         });
+  try {
+    const response = await fetch(
+      "https://dev-api.wealify.com/api/v1/cms/system-payments",
+      {
+        method: "GET",
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: `Bearer ${localStorage.getItem("accessToken")}`,
+        },
+      }
+    );
+    const result = await response.json();
+    card = result.data;
+    console.log("cardokenh: ", card);
 
-//         const { data } = await response.json();
+    const filteredCards = card.filter((c) => c.provider.name === providerName);
 
-//         console.log('data Await:', data);
+    let cardRender = filteredCards
+      .map((card) => {
+        if (card.detail.account_name && card.detail.bank_name) {
+          // xử lý lấy API từ mảng level
+          const levels = card.account_levels
+            .map((level) => level.name)
+            .join(", ");
+          // xử lý lấy API từ mảng có phần tử hoặc không
+          let maxPerDay = "Không có dữ liệu";
+          if (
+            card.limits &&
+            card.limits.length > 0 &&
+            card.limits[0].max_per_day
+          ) {
+            maxPerDay = card.limits[0].max_per_day.toLocaleString("en-US");
+          }
+          //   xử lý lấy API bị lồng mảng trong nhiều object
+          let amounts = "0 VND";
+          if (
+            card.daily_amount &&
+            card.daily_amount.TOP_UP &&
+            card.daily_amount.TOP_UP.detail.length > 0
+          ) {
+            amounts =
+              card.daily_amount.TOP_UP.detail[0].amount.toLocaleString(
+                "es-US"
+              ) + " VND";
+          }
 
-//         // cardContainer(data)
+          let isActive = card.status === true ? "checked" : "";
 
-
-//     } catch (error) {
-//         console.log('Khong the doc du lieu: ', error);
-//     }
-// }
-
-
-
-async function cardContainer() {
-    let card = []
-
-    try {
-        const response = await fetch('https://dev-api.wealify.com/api/v1/cms/system-payments', {
-            method: 'GET',
-            headers: {
-                'Content-Type': 'application/json',
-                Authorization: `Bearer ${localStorage.getItem('accessToken')}`
-            }
-        })
-        const result = await response.json();
-        card = result.data;
-        console.log('cardokenh: ', card);
-
-        let cardRender = card.map(card => {
-
-            if (card.detail.account_name && card.detail.bank_name) {
-                return `
+          return `
              <div class="card__item__container">
                                 <div class="card__item__header">
                                     <div class="content--header">
@@ -186,42 +191,42 @@ async function cardContainer() {
                                         <p>
                                             Ngân hàng
                                         </p>
-                                        <p>ACB</p>
+                                        <p>${card.detail.bank_name}</p>
                                     </div>
                                     <!-- 2 -->
                                     <div class="horizontal__item">
                                         <p>
                                             Chủ tài khoản
                                         </p>
-                                        <p>THE HUMAN BANK</p>
+                                        <p>${card.detail.account_name}</p>
                                     </div>
                                     <!-- 3 -->
                                     <div class="horizontal__item">
                                         <p>
                                             Số tài khoản
                                         </p>
-                                        <p>32947918234</p>
+                                        <p>${card.detail.account_number}</p>
                                     </div>
                                     <!-- 4 -->
                                     <div class="horizontal__item">
                                         <p>
                                             Gán cho level
                                         </p>
-                                        <p>Level 2</p>
+                                        <p>${levels}</p>
                                     </div>
                                     <!-- 5 -->
                                     <div class="horizontal__item">
                                         <p>
                                             Hạn mức/ngày
                                         </p>
-                                        <p>12,312,213 VND</p>
+                                        <p> ${maxPerDay}VND</p>
                                     </div>
                                     <!-- 6 -->
                                     <div class="horizontal__item">
                                         <p>
                                             Đã top-up/ngày
                                         </p>
-                                        <p>0 VND</p>
+                                        <p>${amounts} VND</p>
                                     </div>
                                     <!-- 7 -->
                                     <div class="horizontal__item">
@@ -243,7 +248,7 @@ async function cardContainer() {
                                             Active
                                         </p>
                                         <label class="switch">
-                                            <input type="checkbox" checked>
+                                            <input type="checkbox" ${isActive}>
                                             <span class="slider round" style="height: 34px;"></span>
 
                                         </label>
@@ -251,9 +256,37 @@ async function cardContainer() {
 
                                 </div>
                             </div>
-        `
-            } else if (card.detail.account_name) {
-                return `
+        `;
+        } else if (card.detail.account_name) {
+          // xử lý lấy API từ mảng level
+          const levels = card.account_levels
+            .map((level) => level.name)
+            .join(", ");
+          // xử lý lấy API từ mảng có phần tử hoặc không
+          let maxPerDay = "Không có dữ liệu";
+          if (
+            card.limits &&
+            card.limits.length > 0 &&
+            card.limits[0].max_per_day
+          ) {
+            maxPerDay = card.limits[0].max_per_day.toLocaleString("en-US");
+          }
+          //   xử lý lấy API bị lồng mảng trong nhiều object
+          let amounts = "0 VND";
+          if (
+            card.daily_amount &&
+            card.daily_amount.TOP_UP &&
+            card.daily_amount.TOP_UP.detail.length > 0
+          ) {
+            amounts =
+              card.daily_amount.TOP_UP.detail[0].amount.toLocaleString(
+                "es-US"
+              ) + " VND";
+          }
+
+          let isActive = card.status === true ? "checked" : "";
+
+          return `
                  <div class="card__item__container">
                                 <div class="card__item__header">
                                     <div class="content--header">
@@ -285,14 +318,14 @@ async function cardContainer() {
                                         <p>
                                             Ewallet
                                         </p>
-                                        <p>ACB</p>
+                                        <p>${card.provider.name}</p>
                                     </div>
                                     <!-- 2 -->
                                     <div class="horizontal__item">
                                         <p>
                                             Email
                                         </p>
-                                        <p>THE HUMAN BANK</p>
+                                        <p>${card.detail.email}</p>
                                     </div>
                                     <!-- 3 -->
                                     
@@ -301,21 +334,21 @@ async function cardContainer() {
                                         <p>
                                             Gán cho level
                                         </p>
-                                        <p>Level 2</p>
+                                        <p>${levels}</p>
                                     </div>
                                     <!-- 5 -->
                                     <div class="horizontal__item">
                                         <p>
                                             Hạn mức/ngày
                                         </p>
-                                        <p>12,312,213 VND</p>
+                                        <p>${maxPerDay} USD</p>
                                     </div>
                                     <!-- 6 -->
                                     <div class="horizontal__item">
                                         <p>
                                             Đã top-up/ngày
                                         </p>
-                                        <p>0 VND</p>
+                                        <p>${amounts} USD</p>
                                     </div>
                                     <!-- 7 -->
                                     <div class="horizontal__item">
@@ -337,7 +370,7 @@ async function cardContainer() {
                                             Active
                                         </p>
                                         <label class="switch">
-                                            <input type="checkbox" checked>
+                                            <input type="checkbox" ${isActive}>
                                             <span class="slider round" style="height: 34px;"></span>
 
                                         </label>
@@ -345,27 +378,14 @@ async function cardContainer() {
 
                                 </div>
                             </div>
-                `
-            }
+                `;
+        }
+      })
+      .join("");
 
-
-        }).join('')
-
-        return cardRender;
-    }
-    catch (error) {
-        console.log('Can not render data:', error);
-        return '';
-    }
-
-
+    return cardRender;
+  } catch (error) {
+    console.log("Can not render data:", error);
+    return "";
+  }
 }
-
-
-fetchListCard()
-
-
-
-
-
-
