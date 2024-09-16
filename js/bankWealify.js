@@ -379,40 +379,43 @@ async function cardContainer(providerName) {
                                 </div>
                             </div>
                 `;
-        }else if(!card.detail.account_name && !card.detail.bank_name){
-           // xử lý lấy API từ mảng level
-           const levels = card.account_levels
-           .map((level) => level.name)
-           .join(", ");
-         // xử lý lấy API từ mảng có phần tử hoặc không
-         let maxPerDay = "Không có dữ liệu";
-         if (
-           card.limits &&
-           card.limits.length > 0 &&
-           card.limits[0].max_per_day
-         ) {
-           maxPerDay = card.limits[0].max_per_day.toLocaleString("en-US");
-         }
-         //   xử lý lấy API bị lồng mảng trong nhiều object
-         let amounts = "0 VND";
-         if (
-           card.daily_amount &&
-           card.daily_amount.TOP_UP &&
-           card.daily_amount.TOP_UP.detail.length > 0
-         ) {
-           amounts =
-             card.daily_amount.TOP_UP.detail[0].amount.toLocaleString(
-               "es-US"
-             ) + " VND";
-         }
+        } else if (!card.detail.account_name && !card.detail.bank_name) {
+          // xử lý lấy API từ mảng level
+          const levels = card.account_levels
+            .map((level) => level.name)
+            .join(", ");
+          // xử lý lấy API từ mảng có phần tử hoặc không
+          let maxPerDay = "Không có dữ liệu";
+          if (
+            card.limits &&
+            card.limits.length > 0 &&
+            card.limits[0].max_per_day
+          ) {
+            maxPerDay = card.limits[0].max_per_day.toLocaleString("en-US");
+          }
+          //   xử lý lấy API bị lồng mảng trong nhiều object
+          let amounts = "0 VND";
+          if (
+            card.daily_amount &&
+            card.daily_amount.TOP_UP &&
+            card.daily_amount.TOP_UP.detail.length > 0
+          ) {
+            amounts =
+              card.daily_amount.TOP_UP.detail[0].amount.toLocaleString(
+                "es-US"
+              ) + " VND";
+          }
 
-         let isActive = card.status === true ? "checked" : "";
+          let isActive = card.detail.active === true ? "checked" : "";
+          let isActiveVndw = card.detail.vndw === true ? "checked" : "";
+          let isActiveVndy = card.detail.vndy === true ? "checked" : "";
 
-        //  xử lý lấy balance
-        let balance = Number(card.detail.balance).toLocaleString("en-US") + " VND";
+
+          //  xử lý lấy balance
+          let balance = Number(card.detail.balance).toLocaleString("en-US") + " VND";
 
 
-         return `
+          return `
                 <div class="card__item__container">
                                <div class="card__item__header">
                                    <div class="content--header">
@@ -463,14 +466,34 @@ async function cardContainer(providerName) {
                                    <!-- 5 -->
                                    <!-- 6 -->
                                    <!-- 7 -->
-                                   <!-- 8 -->
-                                   <!-- 9 -->
                                    <div class="horizontal__item">
                                        <p>
                                            Active
                                        </p>
                                        <label class="switch">
                                            <input type="checkbox" ${isActive}>
+                                           <span class="slider round" style="height: 34px;"></span>
+
+                                       </label>
+                                   </div>
+                                   <!-- 8 -->
+                                   <div class="horizontal__item">
+                                       <p>
+                                           Rút VNDW tự dộng
+                                       </p>
+                                       <label class="switch">
+                                           <input type="checkbox" ${isActiveVndw}>
+                                           <span class="slider round" style="height: 34px;"></span>
+
+                                       </label>
+                                   </div>
+                                   <!-- 9 -->
+                                   <div class="horizontal__item">
+                                       <p>
+                                           Rút VNDY tự dộng
+                                       </p>
+                                       <label class="switch">
+                                           <input type="checkbox" ${isActiveVndy}>
                                            <span class="slider round" style="height: 34px;"></span>
 
                                        </label>
