@@ -17,26 +17,153 @@ function clickEvenCard() {
   });
 }
 
-fetch("https://dev-api.wealify.com/api/v1/cms/constants/providers", {
-  method: "GET",
-  headers: {
-    "content-Type": "application/json",
-    Authorization: `Bearer ${localStorage.getItem("accessToken")}`,
+
+
+function checkTimeExpired(time) {
+  // const dateString = new Date(time)
+  // Create a Date object from the string
+  const currentDate = Date.now()
+  // console.log(currentDate)
+  // return true
+  // console.log(convertDateToCustomFormat(dateString), convertDateToCustomFormat(currentDate))
+  return time - 1000 < currentDate // Check if dateString is before the current date
+}
+
+
+function refreshAccessToken() {
+  const refreshToken = localStorage.getItem('refreshToken');
+
+  if (!refreshToken) {
+    alert('Không tìm thấy refresh token. Cần đăng nhập lại.');
+    window.location.href = '/auth/login.html';
+    return;
+  }
+
+
+
+
+  fetch('https://dev-api.wealify.com/api/v1/cms/refresh-token', {
+    method: 'GET',
+    headers: {
+      'Content-Type': 'application/json',
+      Authorization: `Bearer ${localStorage.getItem("refreshToken")}`,
+    },
+  })
+    .then(response => {
+      if (!response.ok) {
+        throw new Error('Làm mới token không thành công');
+      }
+      return response.json();
+    })
+    .then(data => {
+
+      const newAccessToken = data.data.access_token;
+      const newTokenExpired = new Date().getTime() + 10 * 1000;
+
+      localStorage.setItem('accessToken', newAccessToken);
+      localStorage.setItem('tokenExpired', newTokenExpired);
+
+      console.log('Token đã được làm mới thành công');
+    })
+    .catch(error => {
+      console.log('Lỗi làm mới token:', error);
+      alert('Không thể làm mới token. Bạn cần đăng nhập lại.');
+
+      localStorage.removeItem('accessToken');
+      localStorage.removeItem('refreshToken');
+      localStorage.removeItem('newTokenExpired');
+
+
+      window.location.href = '/auth/login.html';
+    });
+}
+
+
+// async function refreshToken() {
+//   const url = "https://dev-api.wealify.com/api/v1/cms/refresh-token";
+//   try {
+//     const response = await fetch(url);
+//     if (!response.ok) {
+//       throw new Error(`Response status: ${response.status}`);
+//     }
+
+//     const json = await response.json();
+//     console.log(json);
+//   } catch (error) {
+//     console.error(error.message);
+//   }
+// }
+
+
+
+
+
+async function callAPI(url = "", option = {}) {
+  // if (checkTokenExpired) {
+  //   refreshAccessToken()
+  // }
+  const expiredTime = localStorage.getItem('expiredTime');
+  if (checkTimeExpired(expiredTime)) {
+    refreshAccessToken()
+  }
+
+  try {
+    const response = await fetch(url, {
+      method: option.method,
+      headers: {
+        'Content-Type': 'application/json',
+        ...option.headers
+      },
+      ...option,
+    });
+
+
+    // if (!response.ok) {
+    //   throw new Error(`Error: ${response.status}`)
+    // }
+    const data = await response.json();
+
+
+    if (!data.status === true) {
+      throw new Error(`Error: ${response.status}`)
+
+    }
+    return data;
+
+  } catch (error) {
+    console.error('API call failed:', error);
+
+  }
+}
+async function fetchAPIProvider(url = "", option = {}, providerList) {
+  try {
+    const dataProvider = await callAPI(url, option);
+    if (dataProvider) {
+      console.log('Data provider:', dataProvider);
+
+      providerList(dataProvider.data);
+    } else {
+      console.log('Khong co du lieu');
+    }
+
+  } catch (error) {
+    console.error('Faile to fetch API:', error)
+  }
+}
+
+fetchAPIProvider(
+  'https://dev-api.wealify.com/api/v1/cms/constants/providers',
+  {
+    headers: {
+      Authorization: `Bearer ${localStorage.getItem("accessToken")}`,
+    },
   },
-})
-  .then((response) => {
-    return response.json();
-  })
-  .then(({ data }) => {
-    console.log("NCC:", data);
-    providerList(data);
-    console.log(" providerList(data)", providerList(data));
-  })
-  .catch((error) => {
-    console.error("Lỗi khi gọi dữ liệu:", error);
-  });
+  providerList
+);
+
 
 let isProviderListCalled = false;
+
 async function providerList(NCCS) {
   if (isProviderListCalled) return;
   isProviderListCalled = true;
@@ -92,9 +219,35 @@ async function providerList(NCCS) {
 
   contentContainer.appendChild(container);
 
+  // call API lấy danh sách account ở đây
+  let card = [];
+  console.log('card:', card);
+
+  const result = await callAPI(
+    "https://dev-api.wealify.com/api/v1/cms/system-payments",
+    {
+      headers: {
+        Authorization: `Bearer ${localStorage.getItem("accessToken")}`,
+      },
+    }
+  );
+
+  if (!result) {
+    console.error("No data returned from API");
+    return;
+  }
+  card = result.data;
+  console.log("cardokenh: ", card);
+
+
   for (const ncc of NCCS) {
     if (ncc.name !== "Wealify") {
       let providerContainer = document.getElementById(`provider-${ncc.name}`);
+      //lọc ra các account thuộc các provider tương ứng
+
+      console.log('card1:', card);
+
+
       let cardRender = await cardContainer(ncc.name);
       providerContainer.innerHTML = cardRender;
     }
@@ -103,58 +256,45 @@ async function providerList(NCCS) {
   clickEvenCard();
 }
 
+
+
 async function cardContainer(providerName) {
-  let card = [];
 
-  try {
-    const response = await fetch(
-      "https://dev-api.wealify.com/api/v1/cms/system-payments",
-      {
-        method: "GET",
-        headers: {
-          "Content-Type": "application/json",
-          Authorization: `Bearer ${localStorage.getItem("accessToken")}`,
-        },
-      }
-    );
-    const result = await response.json();
-    card = result.data;
-    console.log("cardokenh: ", card);
 
-    const filteredCards = card.filter((c) => c.provider.name === providerName);
+  const filteredCards = card.filter((c) => c.provider.name === providerName);
 
-    let cardRender = filteredCards
-      .map((card) => {
-        if (card.detail.account_name && card.detail.bank_name) {
-          // xử lý lấy API từ mảng level
-          const levels = card.account_levels
-            .map((level) => level.name)
-            .join(", ");
-          // xử lý lấy API từ mảng có phần tử hoặc không
-          let maxPerDay = "Không có dữ liệu";
-          if (
-            card.limits &&
-            card.limits.length > 0 &&
-            card.limits[0].max_per_day
-          ) {
-            maxPerDay = card.limits[0].max_per_day.toLocaleString("en-US");
-          }
-          //   xử lý lấy API bị lồng mảng trong nhiều object
-          let amounts = "0 VND";
-          if (
-            card.daily_amount &&
-            card.daily_amount.TOP_UP &&
-            card.daily_amount.TOP_UP.detail.length > 0
-          ) {
-            amounts =
-              card.daily_amount.TOP_UP.detail[0].amount.toLocaleString(
-                "es-US"
-              ) + " VND";
-          }
+  let cardRender = filteredCards
+    .map((card) => {
+      if (card.detail.account_name && card.detail.bank_name) {
+        // xử lý lấy API từ mảng level
+        const levels = card.account_levels
+          .map((level) => level.name)
+          .join(", ");
+        // xử lý lấy API từ mảng có phần tử hoặc không
+        let maxPerDay = "Không có dữ liệu";
+        if (
+          card.limits &&
+          card.limits.length > 0 &&
+          card.limits[0].max_per_day
+        ) {
+          maxPerDay = card.limits[0].max_per_day.toLocaleString("en-US");
+        }
+        //   xử lý lấy API bị lồng mảng trong nhiều object
+        let amounts = "0 VND";
+        if (
+          card.daily_amount &&
+          card.daily_amount.TOP_UP &&
+          card.daily_amount.TOP_UP.detail.length > 0
+        ) {
+          amounts =
+            card.daily_amount.TOP_UP.detail[0].amount.toLocaleString(
+              "es-US"
+            ) + " VND";
+        }
 
-          let isActive = card.status === true ? "checked" : "";
+        let isActive = card.status === true ? "checked" : "";
 
-          return `
+        return `
              <div class="card__item__container">
                                 <div class="card__item__header">
                                     <div class="content--header">
@@ -257,36 +397,36 @@ async function cardContainer(providerName) {
                                 </div>
                             </div>
         `;
-        } else if (card.detail.account_name) {
-          // xử lý lấy API từ mảng level
-          const levels = card.account_levels
-            .map((level) => level.name)
-            .join(", ");
-          // xử lý lấy API từ mảng có phần tử hoặc không
-          let maxPerDay = "Không có dữ liệu";
-          if (
-            card.limits &&
-            card.limits.length > 0 &&
-            card.limits[0].max_per_day
-          ) {
-            maxPerDay = card.limits[0].max_per_day.toLocaleString("en-US");
-          }
-          //   xử lý lấy API bị lồng mảng trong nhiều object
-          let amounts = "0 VND";
-          if (
-            card.daily_amount &&
-            card.daily_amount.TOP_UP &&
-            card.daily_amount.TOP_UP.detail.length > 0
-          ) {
-            amounts =
-              card.daily_amount.TOP_UP.detail[0].amount.toLocaleString(
-                "es-US"
-              ) + " VND";
-          }
+      } else if (card.detail.account_name) {
+        // xử lý lấy API từ mảng level
+        const levels = card.account_levels
+          .map((level) => level.name)
+          .join(", ");
+        // xử lý lấy API từ mảng có phần tử hoặc không
+        let maxPerDay = "Không có dữ liệu";
+        if (
+          card.limits &&
+          card.limits.length > 0 &&
+          card.limits[0].max_per_day
+        ) {
+          maxPerDay = card.limits[0].max_per_day.toLocaleString("en-US");
+        }
+        //   xử lý lấy API bị lồng mảng trong nhiều object
+        let amounts = "0 VND";
+        if (
+          card.daily_amount &&
+          card.daily_amount.TOP_UP &&
+          card.daily_amount.TOP_UP.detail.length > 0
+        ) {
+          amounts =
+            card.daily_amount.TOP_UP.detail[0].amount.toLocaleString(
+              "es-US"
+            ) + " VND";
+        }
 
-          let isActive = card.status === true ? "checked" : "";
+        let isActive = card.status === true ? "checked" : "";
 
-          return `
+        return `
                  <div class="card__item__container">
                                 <div class="card__item__header">
                                     <div class="content--header">
@@ -379,43 +519,43 @@ async function cardContainer(providerName) {
                                 </div>
                             </div>
                 `;
-        } else if (!card.detail.account_name && !card.detail.bank_name) {
-          // xử lý lấy API từ mảng level
-          const levels = card.account_levels
-            .map((level) => level.name)
-            .join(", ");
-          // xử lý lấy API từ mảng có phần tử hoặc không
-          let maxPerDay = "Không có dữ liệu";
-          if (
-            card.limits &&
-            card.limits.length > 0 &&
-            card.limits[0].max_per_day
-          ) {
-            maxPerDay = card.limits[0].max_per_day.toLocaleString("en-US");
-          }
-          //   xử lý lấy API bị lồng mảng trong nhiều object
-          let amounts = "0 VND";
-          if (
-            card.daily_amount &&
-            card.daily_amount.TOP_UP &&
-            card.daily_amount.TOP_UP.detail.length > 0
-          ) {
-            amounts =
-              card.daily_amount.TOP_UP.detail[0].amount.toLocaleString(
-                "es-US"
-              ) + " VND";
-          }
+      } else if (!card.detail.account_name && !card.detail.bank_name) {
+        // xử lý lấy API từ mảng level
+        const levels = card.account_levels
+          .map((level) => level.name)
+          .join(", ");
+        // xử lý lấy API từ mảng có phần tử hoặc không
+        let maxPerDay = "Không có dữ liệu";
+        if (
+          card.limits &&
+          card.limits.length > 0 &&
+          card.limits[0].max_per_day
+        ) {
+          maxPerDay = card.limits[0].max_per_day.toLocaleString("en-US");
+        }
+        //   xử lý lấy API bị lồng mảng trong nhiều object
+        let amounts = "0 VND";
+        if (
+          card.daily_amount &&
+          card.daily_amount.TOP_UP &&
+          card.daily_amount.TOP_UP.detail.length > 0
+        ) {
+          amounts =
+            card.daily_amount.TOP_UP.detail[0].amount.toLocaleString(
+              "es-US"
+            ) + " VND";
+        }
 
-          let isActive = card.detail.active === true ? "checked" : "";
-          let isActiveVndw = card.detail.vndw === true ? "checked" : "";
-          let isActiveVndy = card.detail.vndy === true ? "checked" : "";
-
-
-          //  xử lý lấy balance
-          let balance = Number(card.detail.balance).toLocaleString("en-US") + " VND";
+        let isActive = card.detail.active === true ? "checked" : "";
+        let isActiveVndw = card.detail.vndw === true ? "checked" : "";
+        let isActiveVndy = card.detail.vndy === true ? "checked" : "";
 
 
-          return `
+        //  xử lý lấy balance
+        let balance = Number(card.detail.balance).toLocaleString("en-US") + " VND";
+
+
+        return `
                 <div class="card__item__container">
                                <div class="card__item__header">
                                    <div class="content--header">
@@ -502,13 +642,11 @@ async function cardContainer(providerName) {
                                </div>
                            </div>
                `;
-        }
-      })
-      .join("");
+      }
+    })
+    .join("");
 
-    return cardRender;
-  } catch (error) {
-    console.log("Can not render data:", error);
-    return "";
-  }
+  return cardRender;
+
 }
+
