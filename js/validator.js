@@ -158,73 +158,6 @@ Validator.hasCharacter = function (selector) {
 }
 
 
-// export const refreshToken = async (authTokens) => {
-//     let response = await fetch('https://dev-api.wealify.com/api/v1/cms/refresh-token', {
-//         method: 'POST',
-//         headers: {
-//             'Content-Type': 'application/json'
-//         },
-//         body: JSON.stringify({ 'refresh': authTokens.refresh })
-//     });
-
-//     if (!response.ok) {
-//         console.log('Refresh token expired or invalid. Logging out.');
-//         localStorage.removeItem('authTokens');
-//         window.location.href = '/login';  // Điều hướng về trang đăng nhập
-//         return null;
-//     }
-
-//     let data = await response.json();
-//     localStorage.setItem('authTokens', JSON.stringify(data));
-//     return data;
-// };
-
-
-// let customFetcher = async (url, config = {}) => {
-//     let authTokens = localStorage.getItem('authTokens') ? JSON.parse(localStorage.getItem('authTokens')) : null;
-
-//     if (!authTokens) {
-//         window.location.href = '/login';  // Không có token, điều hướng về trang đăng nhập
-//         return;
-//     }
-
-//     const user = jwt_decode(authTokens.access);
-//     const isExpired = dayjs.unix(user.exp).diff(dayjs()) < 1;
-
-//     if (isExpired) {
-//         authTokens = await refreshToken(authTokens);
-//         if (!authTokens) return;  // Nếu không thể làm mới token, thoát ra
-//     }
-
-//     // Thêm accessToken mới vào headers
-//     config['headers'] = {
-//         Authorization: `Bearer ${authTokens?.access}`
-//     };
-
-//     console.log('Before Request');
-//     let { response, data } = await originalRequest(url, config);
-//     console.log('After Request');
-
-//     // Nếu request trả về Unauthorized, thử làm mới token và gửi lại request
-//     if (response.statusText === 'Unauthorized') {
-//         authTokens = await refreshToken(authTokens);
-//         if (!authTokens) return;  // Nếu không thể làm mới token, thoát ra
-
-//         config['headers'] = {
-//             Authorization: `Bearer ${authTokens?.access}`
-//         };
-
-//         let newResponse = await originalRequest(url, config);
-//         response = newResponse.response;
-//         data = newResponse.data;
-//     }
-
-//     return { response, data };
-// };
-
-// xử lý login
-
-
 const userInfo = {
     email: '',
     password: ''
@@ -255,38 +188,27 @@ loginButton.addEventListener('click', function (e) {
 
             const accessToken = postData.data.access_token;
             const refreshToken = postData.data.refresh_token;
-            // const expiredAt = postData.data.access_expired_at;
-            const crrTime = new Date().getTime();
-            const tokenExpired = crrTime + 5 * 1000
+            const expiredTime = postData.data.access_expired_at;
+            // const crrTime = new Date().getTime();
+            // const expiredTime = crrTime + 1000 * 1000
 
             localStorage.setItem('accessToken', accessToken)
             localStorage.setItem('refreshToken', refreshToken)
-            localStorage.setItem('expiredTime', tokenExpired)
+            localStorage.setItem('expiredTime', expiredTime)
 
-            console.log('expiredTime:::', tokenExpired);
+            console.log('expiredTime:::', expiredTime);
 
             window.location.href = '../screens/manageBankWealify.html'
 
+            const expiredDate = new Date(expiredTime);
+            console.log('Thời gian hết hạn (định dạng dễ đọc):', expiredDate.toLocaleString());
+
         })
         .catch(function (error) {
-            console.log('error: ', error);
+            console.log('error: ', error.message);
             alert('Đăng nhập không thành công')
         });
 });
-
-
-
-
-
-// hàm giải mã token (JWT) lấy thông tin bên trong
-
-
-// kiểm tra hạn của accessToken, nếu không còn  thì về trang login
-// nếu hết hạn thì gửi refreshTOken lên server để nhận về accessToken và refreshToken
-// rồi lưu lại
-
-
-
 
 
 

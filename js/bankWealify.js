@@ -20,15 +20,9 @@ function clickEvenCard() {
 
 
 function checkTimeExpired(time) {
-  // const dateString = new Date(time)
-  // Create a Date object from the string
   const currentDate = Date.now()
-  // console.log(currentDate)
-  // return true
-  // console.log(convertDateToCustomFormat(dateString), convertDateToCustomFormat(currentDate))
-  return time - 1000 < currentDate // Check if dateString is before the current date
+  return time - 1000 < currentDate
 }
-
 
 function refreshAccessToken() {
   const refreshToken = localStorage.getItem('refreshToken');
@@ -38,9 +32,6 @@ function refreshAccessToken() {
     window.location.href = '/auth/login.html';
     return;
   }
-
-
-
 
   fetch('https://dev-api.wealify.com/api/v1/cms/refresh-token', {
     method: 'GET',
@@ -58,10 +49,12 @@ function refreshAccessToken() {
     .then(data => {
 
       const newAccessToken = data.data.access_token;
-      const newTokenExpired = new Date().getTime() + 10 * 1000;
+      const newRefreshToken = data.data.refresh_token;
+      const newExpiredTime = new Date().getTime() + 10 * 1000;
 
       localStorage.setItem('accessToken', newAccessToken);
-      localStorage.setItem('tokenExpired', newTokenExpired);
+      localStorage.setItem('refreshToken', newRefreshToken)
+      localStorage.setItem('expiredTime', newExpiredTime);
 
       console.log('Token đã được làm mới thành công');
     })
@@ -71,7 +64,7 @@ function refreshAccessToken() {
 
       localStorage.removeItem('accessToken');
       localStorage.removeItem('refreshToken');
-      localStorage.removeItem('newTokenExpired');
+      localStorage.removeItem('expiredTime');
 
 
       window.location.href = '/auth/login.html';
@@ -79,29 +72,8 @@ function refreshAccessToken() {
 }
 
 
-// async function refreshToken() {
-//   const url = "https://dev-api.wealify.com/api/v1/cms/refresh-token";
-//   try {
-//     const response = await fetch(url);
-//     if (!response.ok) {
-//       throw new Error(`Response status: ${response.status}`);
-//     }
-
-//     const json = await response.json();
-//     console.log(json);
-//   } catch (error) {
-//     console.error(error.message);
-//   }
-// }
-
-
-
-
-
 async function callAPI(url = "", option = {}) {
-  // if (checkTokenExpired) {
-  //   refreshAccessToken()
-  // }
+
   const expiredTime = localStorage.getItem('expiredTime');
   if (checkTimeExpired(expiredTime)) {
     refreshAccessToken()
@@ -117,10 +89,6 @@ async function callAPI(url = "", option = {}) {
       ...option,
     });
 
-
-    // if (!response.ok) {
-    //   throw new Error(`Error: ${response.status}`)
-    // }
     const data = await response.json();
 
 
@@ -135,6 +103,7 @@ async function callAPI(url = "", option = {}) {
 
   }
 }
+
 async function fetchAPIProvider(url = "", option = {}, providerList) {
   try {
     const dataProvider = await callAPI(url, option);
@@ -197,7 +166,7 @@ async function providerList(NCCS) {
                     <div class="item__content__dropdown">
                         <div class="rightbutton">
                             <button>SẮP XẾP</button>
-                            <button>THÊM TÀI KHOẢN</button>
+                            <button class="addAccountBtn" >THÊM TÀI KHOẢN</button>
                         </div>
 
                     <div class="card__item__container--grand" id="provider-${ncc.name}">
@@ -236,34 +205,31 @@ async function providerList(NCCS) {
     console.error("No data returned from API");
     return;
   }
-  card = result.data;
-  console.log("cardokenh: ", card);
 
+  card = result.data;
+  card.sort((a, b) => a.provider.name.localeCompare(b.provider.name));
 
   for (const ncc of NCCS) {
     if (ncc.name !== "Wealify") {
       let providerContainer = document.getElementById(`provider-${ncc.name}`);
       //lọc ra các account thuộc các provider tương ứng
+      const filterCards = card.filter((c) => c.provider.name === ncc.name);
 
-      console.log('card1:', card);
-
-
-      let cardRender = await cardContainer(ncc.name);
+      let cardRender = await cardContainer(filterCards);
       providerContainer.innerHTML = cardRender;
     }
   }
 
   clickEvenCard();
+  handleAddAcountFunction()
+
 }
 
 
 
-async function cardContainer(providerName) {
+async function cardContainer(filterCards) {
 
-
-  const filteredCards = card.filter((c) => c.provider.name === providerName);
-
-  let cardRender = filteredCards
+  let cardRender = filterCards
     .map((card) => {
       if (card.detail.account_name && card.detail.bank_name) {
         // xử lý lấy API từ mảng level
@@ -650,3 +616,16 @@ async function cardContainer(providerName) {
 
 }
 
+//Xử lý nút thêm tài khoản
+function handleAddAcountFunction() {
+  const modalAdd = document.querySelector('.modal_add_account_bank_container')
+  const addAccountBtn = document.querySelectorAll('.addAccountBtn');
+
+  addAccountBtn.forEach((btn) => {
+    btn.addEventListener('click', () => {
+      console.log('ok');
+      modalAdd.classList.toggle('show')
+    })
+  })
+
+}

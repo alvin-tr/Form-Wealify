@@ -84,17 +84,13 @@ btnX.addEventListener("click", () => {
 });
 
 // xử lý ấn nút Modal thì mở body
-btnModal.addEventListener('click', (e) => {
+// btnModal.addEventListener('click', (e) => {
 
+//   containerModal.classList.add("show");
+//   container.scrollTop = 0
+//   console.log('btnModal', containerModal.classList.add("show"));
 
-
-  // container.classList.add("show");
-  containerModal.classList.add("show");
-  // xử lý tắt modal thì sau khi mở lên tự động cuộn lên trên cùng
-  container.scrollTop = 0
-  console.log('btnModal', containerModal.classList.add("show"));
-
-})
+// })
 
 // xử lý ấn nút Hủy thì đóng modal
 btnHuy.addEventListener('click', () => {
@@ -216,4 +212,3 @@ btnAddCurrency.addEventListener("click", () => {
 });
 
 
-console.log('ễtrnal');
