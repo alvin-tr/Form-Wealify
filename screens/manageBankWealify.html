@@ -46,11 +46,11 @@
 
         </div>
 
-        <!-- Modal add account -->
-        <div class="modal_add_account_bank_container">
+        <!-- Modal add account bank -->
+        <div class="modal_add_account_bank_container" data-provider="Bank transfer">
             <div class="modal-add-layout">
                 <div class="iconX">
-                    <i class="fal fa-times"></i>
+                    <i class="fal fa-times btnClose"></i>
                 </div>
 
                 <div class="modal_title">
@@ -70,34 +70,194 @@
                             </div>
                         </div>
                         <!-- chủ tài khoản -->
-                        <div class="account_input_container">
+                        <div class="bank_input_container">
                             <div class="title_bank_input">
                                 <p>Chủ tài khoản</p>
                             </div>
-                            <div class="input_container">
-                                <input type="text">
+                            <div class="input_container_owner_acc">
+                                <input class="inputBank" placeholder="Nhập tên" type="text">
                             </div>
                         </div>
+                        <!-- Số tài khoản -->
+                        <div class="bank_input_container">
+                            <div class="title_bank_input">
+                                <p>Số tài khoản</p>
+                            </div>
+                            <div class="input_container_acc_number">
+                                <input class="inputBank" placeholder="Nhập số tài khoản" type="number">
+                            </div>
+                        </div>
+                        <!-- Hạn mức -->
+                        <div class="bank_input_container">
+                            <div class="title_bank_input">
+                                <p>Hạn mức</p>
+                            </div>
+                            <div class="limit_input_container">
+                                <input type="number" placeholder="Nhập hạn mức" class="limit_input_bank">
+                                <p class="limit_curency">VND</p>
+                            </div>
+                        </div>
+                        <!-- Gán cho level -->
+                        <div class="level_container">
+                            <div class="title_bank_input">
+                                <p>Gán cho level</p>
+                            </div>
 
+                            <div class="check-input">
+                                <div class="checkContain">
+                                    <div class="level-center">
+                                        <input class="reset-inpuut" type="checkbox">
+                                        <label for="">Level 1</label>
+                                    </div>
+
+                                    <div class="level-center">
+                                        <input class="reset-inpuut" type="checkbox">
+                                        <label for="">Level 2</label>
+                                    </div>
+
+                                    <div class="level-center">
+                                        <input class="reset-inpuut" type="checkbox">
+                                        <label for="">Level 3</label>
+                                    </div>
+
+                                    <div class="level-center">
+                                        <input class="reset-inpuut" type="checkbox">
+                                        <label for="">VIP</label>
+                                    </div>
+                                </div>
+                            </div>
+
+                        </div>
                     </div>
+
                 </div>
 
+                <!-- button footer -->
+                <div class="button_footer">
+                    <button class="btnHuy">
+                        HỦY
+                    </button>
+                    <button class="btnDongY">
+                        ĐỒNG Ý
+                    </button>
+                </div>
             </div>
+
         </div>
 
-    </div>
+        <!-- Modal Pingpong -->
+        <div class="modal_add_account_pingpong_container " data-provider="PingPong">
+            <div class="modal-add-layout">
+                <div class="iconX">
+                    <i class="fal fa-times btnClose"></i>
+                </div>
 
-    <script src="/js/bankWealify.js"></script>
+                <div class="modal_title">
+                    <p>Thêm tài khoản E-wallet</p>
+                </div>
 
-    <script>
-        const accessToken = localStorage.getItem('accessToken');
+                <div class="box_input">
+                    <div class="box_input_container">
+                        <!-- ngân hàng -->
+                        <div class="bank_input_container">
+                            <div class="title_bank_input">
+                                <p>Ngân hàng</p>
+                            </div>
+                            <div class="input_container">
+                                <p class="des_input_bank">ACB bank</p>
+                                <i class="fas fa-caret-down"></i>
+                            </div>
+                        </div>
+                        <!-- chủ tài khoản -->
+                        <div class="bank_input_container">
+                            <div class="title_bank_input">
+                                <p>Chủ tài khoản</p>
+                            </div>
+                            <div class="input_container_owner_acc">
+                                <input class="inputBank" placeholder="Nhập tên" type="text">
+                            </div>
+                        </div>
+                        <!-- Số tài khoản -->
+                        <div class="bank_input_container">
+                            <div class="title_bank_input">
+                                <p>Số tài khoản</p>
+                            </div>
+                            <div class="input_container_acc_number">
+                                <input class="inputBank" placeholder="Nhập số tài khoản" type="number">
+                            </div>
+                        </div>
+                        <!-- Hạn mức -->
+                        <div class="bank_input_container">
+                            <div class="title_bank_input">
+                                <p>Hạn mức</p>
+                            </div>
+                            <div class="limit_input_container">
+                                <input type="number" placeholder="Nhập hạn mức" class="limit_input_bank">
+                                <p class="limit_curency">VND</p>
+                            </div>
+                        </div>
+                        <!-- Gán cho level -->
+                        <div class="level_container">
+                            <div class="title_bank_input">
+                                <p>Gán cho level</p>
+                            </div>
+
+                            <div class="check-input">
+                                <div class="checkContain">
+                                    <div class="level-center">
+                                        <input class="reset-inpuut" type="checkbox">
+                                        <label for="">Level 1</label>
+                                    </div>
+
+                                    <div class="level-center">
+                                        <input class="reset-inpuut" type="checkbox">
+                                        <label for="">Level 2</label>
+                                    </div>
+
+                                    <div class="level-center">
+                                        <input class="reset-inpuut" type="checkbox">
+                                        <label for="">Level 3</label>
+                                    </div>
+
+                                    <div class="level-center">
+                                        <input class="reset-inpuut" type="checkbox">
+                                        <label for="">VIP</label>
+                                    </div>
+                                </div>
+                            </div>
+
+                        </div>
+                    </div>
+
+                </div>
+
+                <!-- button footer -->
+                <div class="button_footer">
+                    <button class="btnHuy">
+                        HỦY
+                    </button>
+                    <button class="btnDongY">
+                        ĐỒNG Ý
+                    </button>
+                </div>
+            </div>
+
+        </div>
 
 
-        if (!accessToken) {
-            window.location.href = '/auth/login.html';
-        }
-        console.log('ỉnternal');
-    </script>
+
+
+        <script src="/js/bankWealify.js"></script>
+
+        <script>
+            const accessToken = localStorage.getItem('accessToken');
+
+
+            if (!accessToken) {
+                window.location.href = '/auth/login.html';
+            }
+            console.log('ỉnternal');
+        </script>
 
 </body>
 

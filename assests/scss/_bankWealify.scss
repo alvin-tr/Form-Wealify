@@ -537,7 +537,7 @@ input:checked+.slider:before {
 }
 
 .bank_input_container{
-    background-color: #6cc48452;
+    // background-color: #6cc48452;
     display: flex;
     flex-direction: row;
     justify-content: space-between;
@@ -574,9 +574,138 @@ input:checked+.slider:before {
         width: 90%;
 }
 
-.account_input_container{
-    padding-top: 12px;
+.input_container_owner_acc{
+width: 50%;
     display: flex;
     flex-direction: row;
-    al
+    border-radius: 6px;
+    justify-content: space-between;
+}
+
+.inputBank{
+    width: 100%;
+    height: 100%;
+    border: 0;
+    padding: 8.5px 14px;
+    border: 1px solid #b0b0b093;
+    border-radius: 6px;
+    font-size: 16px;
+}
+
+.inputBank:focus {
+    border: 1px solid #9155FD;
+}
+
+.input_container_acc_number{
+    width: 50%;
+        display: flex;
+        flex-direction: row;
+        border-radius: 6px;
+        justify-content: space-between;
+}
+
+.input_container_acc_number:focus {
+    border: 1px solid #9155FD;
+}
+
+.limit_input_container {
+        width: 50%;
+            display: flex;
+            flex-direction: row;
+            border-radius: 6px;
+            justify-content: space-between;
+            align-items: center;
+            border: 1px solid #b0b0b093;
+            padding-right: 10px;
+}
+
+.limit_input_bank{
+    width: 85%;
+        height: 100%;
+        border: 0;
+        padding: 8.5px 14px;
+        border: 1px 0 1px 1px solid #b0b0b093;
+        border-radius: 6px;
+        font-size: 16px;
+}
+
+.limit_curency{
+    font-family: $fontFamilyInter;
+    color: #b0b0b0;
+}   
+
+.level_container{
+    display: flex;
+        flex-direction: row;
+        justify-content: space-between;
+        padding-top: 12px;
+}
+
+.check-input{
+    width: 50%;
+}
+
+.level-center{
+    label{
+        font-size: 16px;
+        font-family: $fontFamilyInter;
+        margin-left: 10px;
+    }
+}
+
+.checkContain{
+    display: flex;
+    width: 100%;
+}
+
+.reset-inpuut {
+    width: 15px;
+    height: 15px;
+    border: 2px solid #b0b0b0;
+    border-radius: 4px;
+    background-color: white;
+    cursor: pointer;
+}
+
+.button_footer{
+    padding: 0 20px 20px;
+    display: flex;
+    justify-content: end;
+    button{
+        padding: 6.5px 21px;
+        background-color: #9155FD;
+        font-size: 14px;
+        font-family: $fontFamilyInter;
+        border-radius: 6px;
+        border: 1px solid #9155FD;
+        line-height: 25px;
+    }
+    .btnHuy{
+        background-color: white;
+        color: #9155FD;
+    }
+
+    .btnDongY{
+        margin-left: 8px;
+        color: white;
+
+    }
+}
+
+
+.modal_add_account_pingpong_container {
+    padding: 20px;
+    background-color: rgba(103, 103, 103, 0.55);
+    width: 100%;
+    height: 100%;
+    position: fixed;
+    top: 0;
+    left: 0;
+    display: none;
+    justify-content: center;
+    align-items: center;
+}
+
+.modal_add_account_pingpong_container.show {
+    display: flex;
 }

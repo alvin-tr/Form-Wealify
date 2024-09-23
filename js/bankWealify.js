@@ -166,7 +166,7 @@ async function providerList(NCCS) {
                     <div class="item__content__dropdown">
                         <div class="rightbutton">
                             <button>SẮP XẾP</button>
-                            <button class="addAccountBtn" >THÊM TÀI KHOẢN</button>
+                            <button class="addAccountBtn" data-provider="${ncc.name}">THÊM TÀI KHOẢN</button>
                         </div>
 
                     <div class="card__item__container--grand" id="provider-${ncc.name}">
@@ -224,8 +224,6 @@ async function providerList(NCCS) {
   handleAddAcountFunction()
 
 }
-
-
 
 async function cardContainer(filterCards) {
 
@@ -618,14 +616,47 @@ async function cardContainer(filterCards) {
 
 //Xử lý nút thêm tài khoản
 function handleAddAcountFunction() {
-  const modalAdd = document.querySelector('.modal_add_account_bank_container')
   const addAccountBtn = document.querySelectorAll('.addAccountBtn');
 
-  addAccountBtn.forEach((btn) => {
-    btn.addEventListener('click', () => {
-      console.log('ok');
-      modalAdd.classList.toggle('show')
-    })
-  })
+  // Đối tượng chứa các modal tương ứng với từng provider
+  const modals = {
+    'Bank transfer': document.querySelector('.modal_add_account_bank_container'),
+    'PingPong': document.querySelector('.modal_add_account_pingpong_container'),
+    // Thêm các modal của provider khác vào đây nếu có
+  };
 
+  const btnClose = document.querySelectorAll('.btnClose');
+  const btnHuy = document.querySelectorAll('.btnHuy');
+
+  // Hàm để ẩn tất cả các modal
+  function hideAllModals() {
+    Object.values(modals).forEach(modal => modal.classList.remove('show'));
+  }
+
+  // Hàm toggle để mở/đóng modal
+  function toggleModal(providerName) {
+    hideAllModals(); // Ẩn tất cả modal trước khi mở cái mới
+
+    const modal = modals[providerName];
+    if (modal) {
+      modal.classList.add('show');
+    } else {
+      console.log('Không có modal cho provider này');
+    }
+  }
+
+  // Sự kiện cho nút "THÊM TÀI KHOẢN" để mở modal tương ứng
+  addAccountBtn.forEach((btn) => {
+    btn.addEventListener('click', (event) => {
+      const providerName = event.target.getAttribute('data-provider');
+      toggleModal(providerName);
+    });
+  });
+
+  // Sự kiện cho nút "ĐÓNG" (btnClose) và "HỦY" (btnHuy) để ẩn modal
+  [...btnClose, ...btnHuy].forEach((btn) => {
+    btn.addEventListener('click', () => {
+      hideAllModals();
+    });
+  });
 }
